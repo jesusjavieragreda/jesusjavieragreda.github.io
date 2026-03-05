@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jesús Javier Ágreda — Senior Backend Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f0e;
+      --surface: #141614;
+      --border: #1e2320;
+      --accent: #b8ff57;
+      --accent2: #57ffd4;
+      --text: #e8ede9;
+      --muted: #6b7570;
+      --tag-bg: #1a1f1b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(184,255,87,0.4);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease, width 0.3s, height 0.3s;
+    }
+
+    a:hover ~ .cursor, button:hover ~ .cursor { transform: translate(-50%,-50%) scale(2.5); }
+
+    /* CANVAS */
+    #particles-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 3.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(13,15,14,0.8);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .pulse-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(184,255,87,0.4); }
+      50% { opacity: 0.6; box-shadow: 0 0 0 5px rgba(184,255,87,0); }
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 9rem 3.5rem 5rem;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .hero-bg-text {
+      position: absolute;
+      top: 50%;
+      right: -2rem;
+      transform: translateY(-50%);
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(10rem, 18vw, 22rem);
+      color: rgba(184,255,87,0.025);
+      white-space: nowrap;
+      pointer-events: none;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      user-select: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s forwards;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 7vw, 7.5rem);
+      line-height: 0.95;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      margin-bottom: 2rem;
+      max-width: 900px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.35s forwards;
+    }
+
+    .hero-title .accent { color: var(--accent); font-style: italic; }
+
+    .typing-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .typed-text {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .typed-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: var(--accent);
+      margin-left: 4px;
+      animation: blink-cur 0.8s infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink-cur {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: #8a9490;
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.65s forwards;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0d0f0e;
+      padding: 0.9rem 2.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover { opacity: 0.82; transform: translateY(-2px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      padding: 0.9rem 2.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+
+    .btn-ghost:hover { border-color: var(--muted); transform: translateY(-2px); }
+
+    /* HERO STATS ROW */
+    .hero-stats {
+      display: flex;
+      gap: 0;
+      margin-top: 5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.8s forwards;
+    }
+
+    .hero-stat {
+      flex: 1;
+      padding-right: 2rem;
+      border-right: 1px solid var(--border);
+      margin-right: 2rem;
+    }
+
+    .hero-stat:last-child { border-right: none; margin-right: 0; }
+
+    .stat-n {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.8rem;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-l {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* MARQUEE */
+    .marquee-outer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 0.9rem 0;
+      background: rgba(184,255,87,0.03);
+    }
+
+    .marquee-inner {
+      display: flex;
+      gap: 2.5rem;
+      animation: marquee 25s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-inner span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .marquee-inner span.sep { color: var(--accent); opacity: 0.5; }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* SECTIONS */
+    .section-wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      padding: 6rem 3.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .s-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+    }
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 400;
+      letter-spacing: -0.025em;
+    }
+
+    /* SERVICES */
+    .svc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .svc-card {
+      background: var(--surface);
+      padding: 2.5rem;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .svc-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .svc-card:hover::before { transform: scaleX(1); }
+    .svc-card:hover { background: #171c18; }
+
+    .svc-icon {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent2);
+      letter-spacing: 0.15em;
+      margin-bottom: 1.2rem;
+    }
+
+    .svc-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 0.7rem;
+    }
+
+    .svc-card p {
+      font-size: 0.85rem;
+      color: #7a8580;
+      line-height: 1.75;
+    }
+
+    /* EXPERIENCE */
+    .exp-list { display: flex; flex-direction: column; }
+
+    .exp-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 3rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .exp-row::before {
+      content: '';
+      position: absolute;
+      left: -3.5rem;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s;
+    }
+
+    .exp-row:hover::before { transform: scaleY(1); }
+
+    .exp-meta { display: flex; flex-direction: column; gap: 0.3rem; padding-top: 0.2rem; }
+
+    .exp-period {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .exp-co {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .exp-sec {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-top: 0.4rem;
+    }
+
+    .exp-content h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      margin-bottom: 0.6rem;
+    }
+
+    .exp-content p {
+      font-size: 0.86rem;
+      color: #7a8580;
+      line-height: 1.75;
+      margin-bottom: 1.1rem;
+    }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    .tag {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.65rem;
+      text-transform: uppercase;
+      transition: all 0.15s;
+    }
+
+    .tag:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* STACK */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .stack-cell {
+      background: var(--surface);
+      padding: 1.8rem 2rem;
+      transition: background 0.2s;
+    }
+
+    .stack-cell:hover { background: #171c18; }
+
+    .stack-cat {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--accent2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+
+    .stack-val {
+      font-size: 0.88rem;
+      color: #a0a8a3;
+      line-height: 1.7;
+    }
+
+    /* CONTACT */
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-text p {
+      font-size: 0.95rem;
+      color: #7a8580;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      max-width: 400px;
+    }
+
+    .contact-rows { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+    .c-row {
+      background: var(--surface);
+      padding: 1.3rem 1.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .c-row:hover { background: #171c18; }
+
+    .c-key {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .c-val { font-size: 0.88rem; }
+
+    .c-val a { color: var(--accent); text-decoration: none; }
+    .c-val a:hover { text-decoration: underline; }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem 3.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .f-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .f-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* PHOTO PLACEHOLDER */
+    .photo-placeholder {
+      width: 280px;
+      height: 340px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: var(--muted);
+      position: absolute;
+      right: 3.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .photo-placeholder svg {
+      width: 48px;
+      height: 48px;
+      opacity: 0.25;
+    }
+
+    .photo-placeholder p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+
+    .photo-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .hero { padding: 8rem 1.5rem 4rem; }
+      .hero-bg-text { display: none; }
+      .photo-placeholder { display: none; }
+      .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+      .svc-grid { grid-template-columns: 1fr; }
+      .stack-grid { grid-template-columns: repeat(2, 1fr); }
+      .exp-row { grid-template-columns: 1fr; gap: 1rem; }
+      .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      footer { flex-direction: column; gap: 1rem; padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <canvas id="particles-canvas"></canvas>
+
+  <nav>
+    <a href="#" class="nav-logo">JJÁ · Backend Dev</a>
+    <ul class="nav-links">
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#experiencia">Experiencia</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <div class="nav-badge">
+      <div class="pulse-dot"></div>
+      Disponible para proyectos
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:none;">
+    <div class="hero-bg-text">JAVA</div>
+
+    <!-- Foto: sustituye el bloque photo-placeholder por <img src="tu-foto.jpg"> -->
+    <div class="photo-placeholder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <p>Tu foto aquí</p>
+    </div>
+
+    <div class="hero-eyebrow">Senior Backend Developer · Freelance · Remoto</div>
+
+    <h1 class="hero-title">
+      Microservicios<br>
+      Java &amp; <span class="typing-wrap"><span class="typed-text" id="typed"></span><span class="typed-cursor"></span></span>
+    </h1>
+
+    <p class="hero-sub">
+      5 años desarrollando backends en entornos críticos: banca, sanidad y comunicación. Disponible para proyectos y subcontratación en España.
+    </p>
+
+    <div class="hero-cta">
+      <a href="#contacto" class="btn-primary">Hablemos de tu proyecto</a>
+      <a href="#experiencia" class="btn-ghost">Ver experiencia</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="stat-n">5+</div>
+        <div class="stat-l">Años de experiencia</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-n">3</div>
+        <div class="stat-l">Sectores críticos</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-n">100%</div>
+        <div class="stat-l">Remoto</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-n">Java</div>
+        <div class="stat-l">8 · 11 · 17 · 21</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-outer">
+    <div class="marquee-inner">
+      <span>Java</span><span class="sep">✦</span>
+      <span>Spring Boot</span><span class="sep">✦</span>
+      <span>Microservicios</span><span class="sep">✦</span>
+      <span>Kubernetes</span><span class="sep">✦</span>
+      <span>REST API</span><span class="sep">✦</span>
+      <span>GCP</span><span class="sep">✦</span>
+      <span>CI/CD</span><span class="sep">✦</span>
+      <span>PostgreSQL</span><span class="sep">✦</span>
+      <span>OpenShift</span><span class="sep">✦</span>
+      <span>Spring Security</span><span class="sep">✦</span>
+      <span>Banca</span><span class="sep">✦</span>
+      <span>Sanidad</span><span class="sep">✦</span>
+      <span>Java</span><span class="sep">✦</span>
+      <span>Spring Boot</span><span class="sep">✦</span>
+      <span>Microservicios</span><span class="sep">✦</span>
+      <span>Kubernetes</span><span class="sep">✦</span>
+      <span>REST API</span><span class="sep">✦</span>
+      <span>GCP</span><span class="sep">✦</span>
+      <span>CI/CD</span><span class="sep">✦</span>
+      <span>PostgreSQL</span><span class="sep">✦</span>
+      <span>OpenShift</span><span class="sep">✦</span>
+      <span>Spring Security</span><span class="sep">✦</span>
+      <span>Banca</span><span class="sep">✦</span>
+      <span>Sanidad</span><span class="sep">✦</span>
+    </div>
+  </div>
+
+  <div class="section-wrap">
+
+    <!-- SERVICIOS -->
+    <section id="servicios">
+      <div class="section-head reveal">
+        <span class="s-num">01</span>
+        <h2>¿En qué puedo ayudarte?</h2>
+      </div>
+      <div class="svc-grid reveal">
+        <div class="svc-card">
+          <div class="svc-icon">// 01</div>
+          <h3>Microservicios REST</h3>
+          <p>Diseño e implementación con Java y Spring Boot. Código limpio, bien testeado y listo para producción.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">// 02</div>
+          <h3>Integración y APIs</h3>
+          <p>API-First con Swagger/OpenAPI, integración entre sistemas, conexión con Oracle y PostgreSQL.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">// 03</div>
+          <h3>Cloud y CI/CD</h3>
+          <p>Pipelines con GitHub Actions y Jenkins. Despliegues en Kubernetes, OpenShift y Google Cloud.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">// 04</div>
+          <h3>Refactoring y calidad</h3>
+          <p>Mejora de código existente, tests con JUnit y Mockito, análisis con SonarQube.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">// 05</div>
+          <h3>Subcontratación</h3>
+          <p>Disponible para proyectos de consultoras. Me adapto a tus procesos, stack y metodología ágil.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">// 06</div>
+          <h3>Sectores regulados</h3>
+          <p>Experiencia en banca, sanidad pública y comunicación con sus requisitos técnicos específicos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCIA -->
+    <section id="experiencia">
+      <div class="section-head reveal">
+        <span class="s-num">02</span>
+        <h2>Experiencia</h2>
+      </div>
+      <div class="exp-list">
+        <div class="exp-row reveal">
+          <div class="exp-meta">
+            <span class="exp-period">2025 — Presente</span>
+            <span class="exp-co">Métrica · Madrid</span>
+            <span class="exp-sec">Banca</span>
+          </div>
+          <div class="exp-content">
+            <h3>Senior Backend Developer</h3>
+            <p>Microservicios REST con Java reactivo en proyectos bancarios. Despliegues con GitHub Actions y Kubernetes en OpenShift.</p>
+            <div class="tags">
+              <span class="tag">Java Reactivo</span><span class="tag">Spring Boot</span><span class="tag">JPA/Hibernate</span><span class="tag">OpenShift</span><span class="tag">GitHub Actions</span><span class="tag">Oracle SQL</span><span class="tag">PostgreSQL</span>
+            </div>
+          </div>
+        </div>
+        <div class="exp-row reveal">
+          <div class="exp-meta">
+            <span class="exp-period">2024 — 2025</span>
+            <span class="exp-co">EqTic · Barcelona</span>
+            <span class="exp-sec">Comunicación</span>
+          </div>
+          <div class="exp-content">
+            <h3>Senior Backend Developer</h3>
+            <p>Microservicios multi-versión (Java 8 a 21). Migración de CI/CD de Jenkins a Kubernetes con Google Cloud.</p>
+            <div class="tags">
+              <span class="tag">Java 8/11/17/21</span><span class="tag">Spring Security</span><span class="tag">MyBatis</span><span class="tag">Google Cloud</span><span class="tag">Kubernetes</span><span class="tag">Jenkins</span>
+            </div>
+          </div>
+        </div>
+        <div class="exp-row reveal">
+          <div class="exp-meta">
+            <span class="exp-period">2023 — 2024</span>
+            <span class="exp-co">Accenture · Alicante</span>
+            <span class="exp-sec">Sanidad</span>
+          </div>
+          <div class="exp-content">
+            <h3>System Developer Analyst</h3>
+            <p>Aplicación full-stack para el Ministerio de Sanidad. Backend Java con Spring Boot y frontend Vue.js.</p>
+            <div class="tags">
+              <span class="tag">Java 8</span><span class="tag">Spring Boot</span><span class="tag">Vue.js</span><span class="tag">Oracle SQL</span><span class="tag">JUnit</span><span class="tag">Mockito</span>
+            </div>
+          </div>
+        </div>
+        <div class="exp-row reveal">
+          <div class="exp-meta">
+            <span class="exp-period">2021 — 2023</span>
+            <span class="exp-co">Serbatic · Cuenca</span>
+            <span class="exp-sec">Medios</span>
+          </div>
+          <div class="exp-content">
+            <h3>Desarrollador Full-Stack</h3>
+            <p>Desarrollo y mantenimiento de aplicaciones web para periódicos y revistas del Grupo Zeta / Prensa Ibérica.</p>
+            <div class="tags">
+              <span class="tag">Java 8/11</span><span class="tag">Spring</span><span class="tag">Thymeleaf</span><span class="tag">MongoDB</span><span class="tag">Vue.js</span><span class="tag">PHP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack">
+      <div class="section-head reveal">
+        <span class="s-num">03</span>
+        <h2>Stack tecnológico</h2>
+      </div>
+      <div class="stack-grid reveal">
+        <div class="stack-cell"><div class="stack-cat">Lenguajes</div><div class="stack-val">Java 8 · 11 · 17 · 21<br>PHP · SQL</div></div>
+        <div class="stack-cell"><div class="stack-cat">Frameworks</div><div class="stack-val">Spring Boot · Spring Security<br>Spring Cloud · Vue.js</div></div>
+        <div class="stack-cell"><div class="stack-cat">Persistencia</div><div class="stack-val">JPA · Hibernate · MyBatis<br>Oracle · PostgreSQL · MongoDB</div></div>
+        <div class="stack-cell"><div class="stack-cat">Cloud & DevOps</div><div class="stack-val">Kubernetes · OpenShift · GCP<br>GitHub Actions · Jenkins · Maven</div></div>
+        <div class="stack-cell"><div class="stack-cat">Testing</div><div class="stack-val">JUnit · Mockito<br>SonarQube · Postman</div></div>
+        <div class="stack-cell"><div class="stack-cat">Metodología</div><div class="stack-val">Scrum · API-First<br>Swagger · OpenAPI · Jira</div></div>
+        <div class="stack-cell"><div class="stack-cat">Sectores</div><div class="stack-val">Banca · Sanidad<br>Comunicación · Medios</div></div>
+        <div class="stack-cell"><div class="stack-cat">Formación</div><div class="stack-val">Ing. Informática · UCLM 2015<br>Microservicios Spring · 2023</div></div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto">
+      <div class="section-head reveal">
+        <span class="s-num">04</span>
+        <h2>Hablemos</h2>
+      </div>
+      <div class="contact-inner">
+        <div class="contact-text reveal">
+          <p>Si tienes un proyecto que necesita un backend sólido en Java y Spring Boot, o buscas un perfil técnico para subcontratar, escríbeme. Trabajo 100% remoto y me adapto a tu metodología y tiempos.</p>
+          <a href="mailto:jesusjavieragreda@gmail.com" class="btn-primary">Enviar email</a>
+        </div>
+        <div class="contact-rows reveal">
+          <div class="c-row"><span class="c-key">Email</span><span class="c-val"><a href="mailto:jesusjavieragreda@gmail.com">jesusjavieragreda@gmail.com</a></span></div>
+          <div class="c-row"><span class="c-key">Teléfono</span><span class="c-val"><a href="tel:+34608833232">608 833 232</a></span></div>
+          <div class="c-row"><span class="c-key">LinkedIn</span><span class="c-val"><a href="https://www.linkedin.com/in/jes%C3%BAsjavier-%C3%A1greda-algarra-2b92a2201/" target="_blank">Ver perfil →</a></span></div>
+          <div class="c-row"><span class="c-key">Ubicación</span><span class="c-val">Cuenca · 100% Remoto</span></div>
+          <div class="c-row"><span class="c-key">Disponibilidad</span><span class="c-val" style="color:var(--accent);display:flex;align-items:center;gap:.5rem;"><div class="pulse-dot"></div>Disponible ahora</span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="f-copy">© 2026 Jesús Javier Ágreda Algarra</div>
+    <div class="f-badge"><div class="pulse-dot"></div>Disponible para nuevos proyectos</div>
+  </footer>
+
+  <script>
+    // CURSOR
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    }
+    animRing();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '20px';
+        cursor.style.height = '20px';
+        ring.style.width = '52px';
+        ring.style.height = '52px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '10px';
+        cursor.style.height = '10px';
+        ring.style.width = '36px';
+        ring.style.height = '36px';
+      });
+    });
+
+    // PARTICLES
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function rand(a, b) { return Math.random() * (b - a) + a; }
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = rand(0, W);
+        this.y = rand(0, H);
+        this.vx = rand(-0.2, 0.2);
+        this.vy = rand(-0.2, 0.2);
+        this.r = rand(1, 2);
+        this.alpha = rand(0.2, 0.6);
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > W) this.vx *= -1;
+        if (this.y < 0 || this.y > H) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(184,255,87,${this.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    const NUM = 80;
+    for (let i = 0; i < NUM; i++) particles.push(new Particle());
+
+    function drawLines() {
+      for (let i = 0; i < NUM; i++) {
+        for (let j = i + 1; j < NUM; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(184,255,87,${0.08 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => { p.update(); p.draw(); });
+      drawLines();
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    // TYPING ANIMATION
+    const words = ['Spring Boot', 'Kubernetes', 'Microservicios', 'REST APIs', 'Cloud'];
+    let wi = 0, ci = 0, deleting = false;
+    const el = document.getElementById('typed');
+
+    function type() {
+      const word = words[wi];
+      if (!deleting) {
+        el.textContent = word.slice(0, ++ci);
+        if (ci === word.length) { deleting = true; setTimeout(type, 1800); return; }
+        setTimeout(type, 80);
+      } else {
+        el.textContent = word.slice(0, --ci);
+        if (ci === 0) { deleting = false; wi = (wi + 1) % words.length; setTimeout(type, 300); return; }
+        setTimeout(type, 45);
+      }
+    }
+    setTimeout(type, 1000);
+
+    // SCROLL REVEAL
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // PARALLAX on hero bg text
+    window.addEventListener('scroll', () => {
+      const bgText = document.querySelector('.hero-bg-text');
+      if (bgText) {
+        bgText.style.transform = `translateY(calc(-50% + ${window.scrollY * 0.3}px))`;
+      }
+    });
+  </script>
+
+</body>
+</html>
